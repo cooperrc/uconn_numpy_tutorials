@@ -12,24 +12,33 @@ kernelspec:
   name: python3
 ---
 
-```{code-cell} ipython3
-import numpy as np
-import matplotlib.pyplot as plt
-```
+
 
 # NumPy Tutorials: Fast Fourier Transform and natural frequency
 
 +++
 
-### In This Tutorial You Will Learn:
- 1. Generate a sine wave and plot graph
- 2. Plot time series data
- 3. Generate FFT utilizing sine wave data
- 4. Using FFT plot amplitude vs frequency graphs
- 5. Upload experimental data using np.loadtxt function
- 6. Find the first natural frequency of a vibrating beam using experimental data
+## What you'll Learn:
+ - Generate a sine wave and plot graph
+ - Plot time series data
+ - Generate FFT utilizing sine wave data
+ - Using FFT plot amplitude vs frequency graphs
+ - Upload experimental data using np.loadtxt function
+ - Find the first natural frequency of a vibrating beam using experimental data
+
+## What you'll need
+
+- NumPy imported as `import numpy as np`
+- Matplotlib's PyPlot imported as `import matplotib.pyplot as plt`
+- NumPy functions to create, operate, and load arrays into your workspace `linspace`, `sin`, `loadtxt`, `mean`, and `fft`
+- _anything else?_
 
 +++
+
+```{code-cell} ipython3
+import numpy as np
+import matplotlib.pyplot as plt
+```
 
 ### What is Fast Fourier Transform (FFT)?
 
@@ -65,10 +74,8 @@ time = 10 #duration of sin function, in terms of seconds
 wave_freq = N_freq * time #this outputs a wave frequency over the given time frame
 
 #define a sine wave function in terms of the listed variables
-def sine_function(frequency, N_freq, time):
-    x = np.linspace(0, time, wave_freq) 
-    y = np.sin((2 * np.pi * x)) #sine function that utilizes the variables associated with 'x'
-    return x,y
+x = np.linspace(0, time, N_freq)
+y = np.sin(2*np.pi*x)
 ```
 
 Once defining the sine wave function that implements frequency over a
@@ -76,7 +83,6 @@ certain period of time, you can proceed to graph this data to output a
 sine wave graph:
 
 ```{code-cell} ipython3
-x, y = sine_function(100, N_freq, time) #x and y variables are 'returned' when you define the function
 plt.title('Sine Wave Graph')
 plt.plot(x, y)
 plt.xlabel('Time (seconds)')
@@ -94,26 +100,12 @@ function. You can test several different range options to view the 1st,
 2nd, 3rd, etc. frequencies from the sine wave graph:
 
 ```{code-cell} ipython3
-N_freq = 100 
-time = 10 
-wave_freq = N_freq * time 
-x = np.linspace(0, time, wave_freq)
+sampling_freq = 100 # samples/s
+time = 10 # s
+number_samples = N_freq * time # number of samples
+x = np.linspace(0, time, number_samples)
 y = np.sin((2 * np.pi * x))
 func = np.fft.fft(y) # np.fft.fft(y) is the numpy function used to generate the FFT of a data
-
-for N in [20]: # take a range for a given sample size and focus on generating a FFT for it
-    step = (10) / (N+1) #create a step size of 10 seconds over 20 samples (due to 20 being the range)
-    t = np.arange(0,10+step, step) # use np.arange function for the time to start at 0 and end at 10 + step
-    func= np.sin(2*np.pi*t) # this is the function of the overall graph
-    FFT= np.fft.fft(func) # converts the sine wave data into FFT
-    freq_step = (N/time) / len(FFT) # freq_step in order to create a step function using samples over time and divide by the number of items in the FFT generated
-    freqs = np.arange(0,N/time, freq_step)
-    plt.plot(freqs, np.absolute(FFT))
-plt.xlabel('Frequency')
-plt.ylabel('Amplitude')
-plt.title('FFT of sin(2pi t)')
-plt.legend()
-plt.xlim((0,2))
 ```
 
 As shown above, a natural frequency wave was generated for a range of
@@ -122,26 +114,6 @@ as shown by the following 2 graphs. Where the ranges go from 0 to 3
 Hertz and 0 to 4 Hertz:
 
 +++
-
-Ex - Range from 0 to 3 Hertz FFT graph of sin(2pi):
-
-```{code-cell} ipython3
-for N in [20, 30]:
-    step = (10) / (N+1)
-    t = np.arange(0,10+step, step)
-    func= np.sin(2*np.pi*t)
-    FFT= np.fft.fft(func)
-    freq_step = (N/time) / len(FFT)
-    freqs = np.arange(0,N/time, freq_step)
-    plt.plot(freqs, np.absolute(FFT))
-plt.xlabel('Frequency')
-plt.ylabel('Amplitude')
-plt.title('FFT of sin(2pi t)')
-plt.legend()
-plt.xlim((0,3))
-```
-
-Ex - Range from 0 to 4 Hertz FFT graph of sin(2pi):
 
 ```{code-cell} ipython3
 for N in [20,30,40]:
