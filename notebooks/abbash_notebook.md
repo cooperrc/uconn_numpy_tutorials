@@ -44,9 +44,8 @@ import matplotlib.pyplot as plt
 
 +++
 
-   A Fast Fourier Transform is a fundamental concept in the world of
-   engineering. It is specifically used in the field of vibrations and
-   measuring frequencies of various devices. FFT is primarily used to
+   A Fast Fourier Transform (FFT) is a fundamental concept in the world of engineering. You can use FFT in the field of vibrations and measuring frequencies of various devices. 
+   FFT is primarily used to
    compute discrete functions, such as trigonometric functions, time it
    takes to complete a cycle, etc. Whereas, the FFT utilizes signals of
    any device/function and converts them from time domains into
@@ -74,8 +73,8 @@ time = 10 #duration of sin function, in terms of seconds
 wave_freq = N_freq * time #this outputs a wave frequency over the given time frame
 
 #define a sine wave function in terms of the listed variables
-x = np.linspace(0, time, N_freq)
-y = np.sin(2*np.pi*x)
+t = np.linspace(0, time, N_freq)
+y = np.sin(2*np.pi*t)
 ```
 
 Once defining the sine wave function that implements frequency over a
@@ -84,7 +83,7 @@ sine wave graph:
 
 ```{code-cell} ipython3
 plt.title('Sine Wave Graph')
-plt.plot(x, y)
+plt.plot(t, y)
 plt.xlabel('Time (seconds)')
 plt.ylabel('Amplitude (meters)')
 plt.grid('True')
@@ -103,8 +102,8 @@ function. You can test several different range options to view the 1st,
 sampling_freq = 100 # samples/s
 time = 10 # s
 number_samples = N_freq * time # number of samples
-x = np.linspace(0, time, number_samples)
-y = np.sin((2 * np.pi * x))
+t = np.linspace(0, time, number_samples)
+y = np.sin((2 * np.pi * t))
 func = np.fft.fft(y) # np.fft.fft(y) is the numpy function used to generate the FFT of a data
 ```
 
@@ -113,20 +112,27 @@ As shown above, a natural frequency wave was generated for a range of
 as shown by the following 2 graphs. Where the ranges go from 0 to 3
 Hertz and 0 to 4 Hertz:
 
+The FFT process is done in three steps:
+
+1. `y_FFT = np.fft.fft(y)`: the NumPy `fft` function calculates the fast Fourier transform of the data sampled `number_samples = [20, 30, 40]` over time period of `time = 10` seconds
+2. `freq_step = (N/time) / len(FFT)`
+3. `freqs = np.linspace(0,N/time, len(FFT))`
+
+
 +++
 
 ```{code-cell} ipython3
-for N in [20,30,40]:
-    step = (10) / (N+1)
-    t = np.linspace(0,10,N+1)
-    func= np.sin(2*np.pi*t)
-    FFT= np.fft.fft(func)
+for N in [20, 30, 40]:
+    number_samples = N+1
+    t = np.linspace(0, time, number_samples) # time defined 0 to 10 s
+    y = np.sin(2*np.pi*t) # function y(t) defined as 1-Hz sine-wave
+    y_FFT = np.fft.fft(y)
     freq_step = (N/time) / len(FFT)
     freqs = np.linspace(0,N/time, len(FFT))
     plt.plot(freqs, np.absolute(FFT))
 plt.xlabel('frequency (Hz)')
 plt.ylabel('Amplitude')
-plt.title('FFT of sin(2pi t)')
+plt.title(r'FFT of $\sin(2\pi t)$')
 plt.legend()
 plt.xlim((0,4))
 ```
